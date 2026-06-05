@@ -9,7 +9,8 @@
 </head>
 <body>
     <header class="header">
-        <div>
+        <div class="brand-block">
+            <div class="authors-top">Andrés Oliva Villaseñor · Luis Gerardo Cardona Ramos</div>
             <h1>MediLogic</h1>
             <p>Doctor virtual general con Prolog, CLISP, FastAPI y Django</p>
         </div>
@@ -24,7 +25,7 @@
     </main>
 
     <footer class="footer">
-        Sistema educativo. No sustituye una consulta médica profesional.
+        <div>Sistema educativo. No sustituye una consulta médica profesional.</div>
     </footer>
 </body>
 </html>
