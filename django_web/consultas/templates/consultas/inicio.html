@@ -41,7 +41,10 @@
             </div>
 
             <aside class="selected-panel">
-                <h4>Síntomas seleccionados</h4>
+                <div class="selected-panel-header">
+                    <h4>Síntomas seleccionados</h4>
+                    <button type="button" id="clear-symptoms" class="clear-button">Borrar síntomas</button>
+                </div>
                 <div id="selected-symptoms" class="selected-symptoms">
                     <p class="empty mini">Aún no has seleccionado síntomas.</p>
                 </div>
@@ -105,15 +108,29 @@
             const card = document.createElement("div");
             card.className = "selected-symptom-card";
             card.innerHTML = `
+                <button type="button" class="remove-symptom" aria-label="Quitar ${input.dataset.label}">×</button>
                 <strong>${input.dataset.label}</strong>
                 <p>${input.dataset.description}</p>
             `;
+
+            card.querySelector(".remove-symptom").addEventListener("click", () => {
+                input.checked = false;
+                actualizarSintomasSeleccionados();
+            });
+
             contenedor.appendChild(card);
         });
     }
 
     document.querySelectorAll('input[name="sintomas"]').forEach((input) => {
         input.addEventListener("change", actualizarSintomasSeleccionados);
+    });
+
+    document.getElementById("clear-symptoms").addEventListener("click", () => {
+        document.querySelectorAll('input[name="sintomas"]').forEach((input) => {
+            input.checked = false;
+        });
+        actualizarSintomasSeleccionados();
     });
 
     actualizarSintomasSeleccionados();
