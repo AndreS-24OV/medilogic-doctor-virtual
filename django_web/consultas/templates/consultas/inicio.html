@@ -3,7 +3,7 @@
 {% block content %}
 <section class="card hero">
     <h2>Consulta de síntomas</h2>
-    <p>Selecciona los síntomas que presenta el usuario. Al elegirlos, aparecerán a la derecha con una explicación de cómo se siente cada síntoma.</p>
+    <p>Selecciona los síntomas que presenta el usuario. El sistema dará una orientación general y un nivel de riesgo.</p>
 </section>
 
 {% if error %}
@@ -13,41 +13,15 @@
 <section class="grid-layout">
     <form method="post" class="card form-card">
         {% csrf_token %}
-        <div class="symptoms-header">
-            <div>
-                <h3>Síntomas disponibles</h3>
-                <p class="helper-text">Marca uno o varios síntomas para analizarlos.</p>
-            </div>
-            <span id="selected-count" class="counter">0 seleccionados</span>
+        <h3>Síntomas disponibles</h3>
+        <div class="symptom-grid">
+            {% for valor, texto in sintomas %}
+                <label class="symptom-item">
+                    <input type="checkbox" name="sintomas" value="{{ valor }}" {% if valor in seleccionados %}checked{% endif %}>
+                    <span>{{ texto }}</span>
+                </label>
+            {% endfor %}
         </div>
-
-        <div class="symptom-selector-layout">
-            <div class="symptom-list-area">
-                <div class="symptom-grid">
-                    {% for sintoma in sintomas %}
-                        <label class="symptom-item">
-                            <input
-                                type="checkbox"
-                                name="sintomas"
-                                value="{{ sintoma.valor }}"
-                                data-label="{{ sintoma.texto }}"
-                                data-description="{{ sintoma.descripcion }}"
-                                {% if sintoma.valor in seleccionados %}checked{% endif %}
-                            >
-                            <span>{{ sintoma.texto }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <aside class="selected-panel">
-                <h4>Síntomas seleccionados</h4>
-                <div id="selected-symptoms" class="selected-symptoms">
-                    <p class="empty mini">Aún no has seleccionado síntomas.</p>
-                </div>
-            </aside>
-        </div>
-
         <button type="submit">Analizar síntomas</button>
     </form>
 
@@ -86,36 +60,4 @@
         {% endif %}
     </section>
 </section>
-
-<script>
-    function actualizarSintomasSeleccionados() {
-        const contenedor = document.getElementById("selected-symptoms");
-        const contador = document.getElementById("selected-count");
-        const seleccionados = Array.from(document.querySelectorAll('input[name="sintomas"]:checked'));
-
-        contador.textContent = seleccionados.length === 1 ? "1 seleccionado" : `${seleccionados.length} seleccionados`;
-        contenedor.innerHTML = "";
-
-        if (seleccionados.length === 0) {
-            contenedor.innerHTML = '<p class="empty mini">Aún no has seleccionado síntomas.</p>';
-            return;
-        }
-
-        seleccionados.forEach((input) => {
-            const card = document.createElement("div");
-            card.className = "selected-symptom-card";
-            card.innerHTML = `
-                <strong>${input.dataset.label}</strong>
-                <p>${input.dataset.description}</p>
-            `;
-            contenedor.appendChild(card);
-        });
-    }
-
-    document.querySelectorAll('input[name="sintomas"]').forEach((input) => {
-        input.addEventListener("change", actualizarSintomasSeleccionados);
-    });
-
-    actualizarSintomasSeleccionados();
-</script>
 {% endblock %}
