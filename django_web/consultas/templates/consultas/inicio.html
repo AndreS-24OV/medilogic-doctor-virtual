@@ -1,0 +1,63 @@
+{% extends 'consultas/base.html' %}
+
+{% block content %}
+<section class="card hero">
+    <h2>Consulta de síntomas</h2>
+    <p>Selecciona los síntomas que presenta el usuario. El sistema dará una orientación general y un nivel de riesgo.</p>
+</section>
+
+{% if error %}
+<div class="alert">{{ error }}</div>
+{% endif %}
+
+<section class="grid-layout">
+    <form method="post" class="card form-card">
+        {% csrf_token %}
+        <h3>Síntomas disponibles</h3>
+        <div class="symptom-grid">
+            {% for valor, texto in sintomas %}
+                <label class="symptom-item">
+                    <input type="checkbox" name="sintomas" value="{{ valor }}" {% if valor in seleccionados %}checked{% endif %}>
+                    <span>{{ texto }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit">Analizar síntomas</button>
+    </form>
+
+    <section class="card result-card">
+        <h3>Resultado</h3>
+        {% if resultado %}
+            <div class="risk risk-{{ resultado.riesgo.nivel }}">
+                Riesgo: {{ resultado.riesgo.nivel|title }}
+            </div>
+
+            <h4>Síntomas recibidos</h4>
+            <ul>
+                {% for sintoma in resultado.sintomas_recibidos %}
+                    <li>{{ sintoma }}</li>
+                {% endfor %}
+            </ul>
+
+            <h4>Posibles orientaciones</h4>
+            {% if resultado.diagnosticos_posibles %}
+                {% for item in resultado.diagnosticos_posibles %}
+                    <div class="diagnosis">
+                        <strong>{{ item.enfermedad }}</strong>
+                        <span>{{ item.porcentaje }}% de coincidencia</span>
+                        <small>Coincidencias: {{ item.coincidencias|join:", " }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No se encontró una coincidencia clara.</p>
+            {% endif %}
+
+            <h4>Recomendación</h4>
+            <p>{{ resultado.riesgo.recomendacion }}</p>
+            <p class="notice">{{ resultado.aviso }}</p>
+        {% else %}
+            <p class="empty">Aquí aparecerá el resultado después de enviar una consulta.</p>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

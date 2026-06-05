@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: medilogic-doctor-virtual
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: API_URL
+        value: "http://127.0.0.1:8001/consulta"
+      - key: SECRET_KEY
+        generateValue: true
