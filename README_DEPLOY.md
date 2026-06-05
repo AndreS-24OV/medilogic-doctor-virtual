@@ -80,3 +80,10 @@ http://127.0.0.1:8000
 - Django usa WhiteNoise para servir archivos estáticos en producción.
 - SQLite funciona para una práctica escolar, pero para producción real conviene PostgreSQL.
 - Este sistema es educativo y no sustituye una consulta médica profesional.
+
+
+## Cambios de esta versión
+
+- Se restauró el panel derecho con descripción de síntomas seleccionados.
+- Se corrigieron nombres con guion bajo en síntomas y enfermedades.
+- Se evita que una enfermedad salga repetida varias veces.
